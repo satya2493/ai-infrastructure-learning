@@ -1,34 +1,45 @@
-# Day 1: Python Setup Test
-# My AI Infrastructure Learning Journey
+# Day 1: Python Networking Calculations
+# Spine-Leaf Calculator
 
-print("🚀 Python is working!")
-print("=" * 50)
+#1. Create a dictionary representing a spine switch
+spine_switch = {
+    "hostname": "SPINE-01",
+    "model": "Arista DCS-720",
+    "ports": 48,
+    "uplink_speed": "400G",
+    "role": "spine"
+}
 
-# Basic spine-leaf calculation
-spine_count = 4
-leaf_count = 20
-servers_per_leaf = 48
+#2. Create a list of 4 leaf switches
+leaf_switches = [
+    {"hostname": "LEAF-01", "model": "Arista DCS-705", "ports": 48, "connected_servers": 40 },
+    {"hostname": "LEAF-02", "model": "Arista DCS-705", "ports": 48, "connected_servers": 38 },
+    {"hostname": "LEAF-03", "model": "Arista DCS-705", "ports": 48, "connected_servers": 42 },
+    {"hostname": "LEAF-04", "model": "Arista DCS-705", "ports": 48, "connected_servers": 36 }
+]
 
-total_servers = leaf_count * servers_per_leaf
-connections = leaf_count * spine_count
+#3. Write a function that calculates the total number of servers in the fabric
+def calculate_total_servers (leaf_list):
+    total_servers = 0
+    for leaf in leaf_list:
+        total_servers = total_servers + leaf["connected_servers"]
+    return total_servers
 
-print(f"Data Center Fabric Configuration:")
-print(f"  Spine Switches: {spine_count}")
-print(f"  Leaf Switches: {leaf_count}")
-print(f"  Servers per Leaf: {servers_per_leaf}")
-print(f"  Total Servers: {total_servers}")
-print(f"  Total Spine-Leaf Connections: {connections}")
-print("=" * 50)
+#4. Write a function that calculates the oversubscription ration
+# Each leaf has 48x10G downlink (480 Gbps), 6x40G uplink (240 Gbps)
+def calculate_oversubscription():
+    downlink = 48 * 10
+    uplink = 6 * 40
+    ratio = downlink/uplink
+    return ratio
 
-# Calculate oversubscription ratio
-# Each leaf: 48x 10G downlinks, 6x 40G uplinks
-downlink_capacity = 48 * 10  # Gbps
-uplink_capacity = 6 * 40     # Gbps
-oversubscription = downlink_capacity / uplink_capacity
+#5. Print results
+print("=" * 60)
+print(f"Spine Switch: {spine_switch['hostname']}")
+print(f"Number of Leaf Switches: {len(leaf_switches)}")
+print(f"Total Servers: {calculate_total_servers(leaf_switches)}")
+print(f"Oversubscription Ratio: {calculate_oversubscription()}:1")
+print("=" * 60)
 
-print(f"\nOversubscription Ratio: {oversubscription}:1")
 
-if oversubscription <= 3:
-    print("✅ Good oversubscription ratio!")
-else:
-    print("⚠️  High oversubscription - consider adding uplinks")
+
